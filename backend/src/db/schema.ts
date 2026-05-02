@@ -90,3 +90,82 @@ export const runs=sqliteTable("runs",{
     startedAt:      text("started_at").notNull().default(sql`(datetime(now))`),
     finishedAt:     text("finished_at"),
 });
+//Run messages(full conversation history per run)
+export const runMessages=sqliteTable("run_messages",{
+    id:         text("id").primaryKey(),
+    runId:      text("run_id").notNull().references(()=> runs.id),
+    role:       text("role").notNull(),
+    content:    text("content").notNull(),
+    toolCallId:     text("tool_call_id"),
+    createdAt:      text("created_att").notNull().default(sql`(datetime('now'))`),
+});
+//Budgets
+export const budgets=sqliteTable("budgets",{
+    id:     text("id").primaryKey(),
+    agentId:        text("agent_id").notNull().references(()=>agents.id),
+    companyId:      text('company_id').notNull().references(()=> companies.id),
+    month:          text("month").notNull(),
+    tokensUsed:     integer("tokens_used").notNull().default(0),
+    tokensLimit:    integer("tokens_limit").notNull().default(100000),
+    hardStop:       integer("hard_stop",{mode:"boolean"}).notNull().default(true),
+    createdAt:      text("created_at").notNull().default(sql`(datetime('now'))`),
+    updatedAt:      text("updated_at").notNull().default(sql`(datetime('now'))`),
+});
+//Secrets
+export const secrets=sqliteTable("secrets",{
+    id:                 text("id").primaryKey(),
+    companyId:          text("company_id").notNull().references(()=> companies.id),
+    key:                text("key").notNull(),
+    encryptedValue:     text("encrypted_value").notNull(),
+    createdAt:          text("created_at").notNull().default(sql`(datetime('now'))`),
+});
+//skills(Agents.md //skill.md content injected at runtime)
+export const skills =sqliteTable("skills",{
+    id:         text("id").primaryKey(),
+    agentId:    text("agent_id").references(()=> agents.id),
+    companyId:  text("comapny_id").notNull().references(()=>companies.id),
+    name:       text("name") .notNull(),
+    content:    text("content").notNull(),
+    createdAt:  text("created_at").notNull().default(sql`(datetime('now'))`),
+
+});
+export const routines=sqliteTable("routines",{
+    id:         text("id").primaryKey(),
+    companyId:      text("company_id").notNull().references(()=>companies.id),
+    agentId: text("agent_id").notNull().references(()=>agents.id),
+    name:   text("name").notNull(),
+    description:    text("description").notNull().default(""),
+    cronExpr:   text("cron_expr").notNull(),
+    isActive:   integer("is_active",{mode:"boolean"}).notNull().default(true),
+    lastRunAt:  text("last_run_at"),
+    nextRunAt:  text("next_run_at"),
+    createdAt:  text("created_at").notNull().default(sql`(datetime(now))`),
+});
+// ─── Approvals ─────────────────────────────
+export const approvals = sqliteTable("approvals", {
+  id:          text("id").primaryKey(),
+  companyId:   text("company_id").notNull().references(() => companies.id),
+  taskId:      text("task_id").references(() => tasks.id),
+  runId:       text("run_id").references(() => runs.id),
+  requestedBy: text("requested_by").notNull(),  // agent id
+  reviewedBy:  text("reviewed_by"),             // user id who approved/rejected
+  status:      text("status").notNull().default("pending"),
+  // 'pending' | 'approved' | 'rejected'
+  reason:      text("reason"),
+  createdAt:   text("created_at").notNull().default(sql`(datetime('now'))`),
+  resolvedAt:  text("resolved_at"),
+});
+
+// ─── Events (immutable audit log) ─────────────────────────────────────────────
+export const events = sqliteTable("events", {
+  id:          text("id").primaryKey(),
+  companyId:   text("company_id").notNull().references(() => companies.id),
+  actorType:   text("actor_type").notNull(),    // 'agent' | 'user' | 'system'
+  actorId:     text("actor_id").notNull(),
+  action:      text("action").notNull(),
+  // e.g. 'task.checked_out' | 'run.completed' | 'budget.warning' | 'approval.requested'
+  entityType:  text("entity_type"),             // 'task' | 'agent' | 'run' | ...
+  entityId:    text("entity_id"),
+  payloadJson: text("payload_json"),            // JSON string of event-specific data
+  createdAt:   text("created_at").notNull().default(sql`(datetime('now'))`),
+});
