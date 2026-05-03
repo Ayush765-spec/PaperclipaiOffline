@@ -3,7 +3,7 @@ import {
   sqliteTable,
   text,
   integer,
-  real,
+  
 } from "drizzle-orm/sqlite-core";
 
 
@@ -156,7 +156,7 @@ export const approvals = sqliteTable("approvals", {
   resolvedAt:  text("resolved_at"),
 });
 
-// ─── Events (immutable audit log) ─────────────────────────────────────────────
+// ─── Events (immutable audit log) 
 export const events = sqliteTable("events", {
   id:          text("id").primaryKey(),
   companyId:   text("company_id").notNull().references(() => companies.id),
