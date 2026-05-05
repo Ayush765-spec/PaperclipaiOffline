@@ -6,6 +6,7 @@ import {config} from "dotenv"
 import { companiesRoutes } from "./modules/companies/companies.routes.js";
 import { agentsRoutes } from "./modules/agents/agents.routes.js";
 import { tasksRoutes } from "./modules/tasks/tasks.routes.js";
+import { startHeartbeat } from "./lib/heartbeat.js";
 config();
 
 const server=Fastify({
@@ -41,6 +42,7 @@ server.get("/health",async()=>{
     return{status:"ok",timestamp:new Date().toISOString()};
 
 });
+startHeartbeat();
 //Start
 try{
     await server.listen({port:3000,host:"0.0.0.0"});
