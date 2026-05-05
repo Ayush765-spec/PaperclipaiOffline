@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node --esm src/index.ts --ext ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "migrate": "drizzle-kit migrate",
     "generate": "drizzle-kit generate",
@@ -22,6 +22,7 @@
     "drizzle-kit": "^0.31.10",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   },
   "dependencies": {
