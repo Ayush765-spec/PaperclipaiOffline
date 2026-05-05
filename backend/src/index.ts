@@ -3,7 +3,9 @@ import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
 import websocket from "@fastify/websocket";
 import {config} from "dotenv"
-
+import { companiesRoutes } from "./modules/companies/companies.routes.js";
+import { agentsRoutes } from "./modules/agents/agents.routes.js";
+import { tasksRoutes } from "./modules/tasks/tasks.routes.js";
 config();
 
 const server=Fastify({
@@ -26,6 +28,13 @@ await server.register(jwt,{
 
 });
 await server.register(websocket);
+
+//Routes
+
+await server.register(companiesRoutes);
+await server.register(agentsRoutes);
+await server.register(tasksRoutes);
+
 
 //--Health check
 server.get("/health",async()=>{
