@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..600&display=swap');
+
+:root {
+  /* backgrounds — darkest to lightest */
+  --bg:        #0d0d0d;
+  --bg-1:      #111111;
+  --bg-2:      #161616;
+  --bg-3:      #1c1c1c;
+  --bg-hover:  #202020;
+
+  /* borders */
+  --border:    rgba(255,255,255,0.07);
+  --border-md: rgba(255,255,255,0.11);
+
+  /* text */
+  --text-1: #e8e8e8;   /* primary */
+  --text-2: #a0a0a0;   /* secondary */
+  --text-3: #5a5a5a;   /* muted / labels */
+
+  /* accent — indigo */
+  --accent:    #5b5fc7;
+  --accent-2:  #7c7ff0;
+  --accent-bg: rgba(91,95,199,0.12);
+
+  /* semantic colors */
+  --green:      #3dd68c;
+  --green-bg:   rgba(61,214,140,0.10);
+  --yellow:     #f0b429;
+  --yellow-bg:  rgba(240,180,41,0.10);
+  --red:        #f05d5d;
+  --red-bg:     rgba(240,93,93,0.10);
+
+  /* layout dimensions */
+  --rail-w:    52px;
+  --sidebar-w: 224px;
+
+  /* shape */
+  --radius:    6px;
+  --radius-lg: 10px;
+
+  /* typography */
+  --font: 'Inter', system-ui, sans-serif;
+}
