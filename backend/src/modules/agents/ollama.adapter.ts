@@ -283,17 +283,37 @@ Be concise and focused. Only do what the task requires.`;
         tool_calls: assistantMessage.tool_calls as unknown[],
       });
 
-      // No tool calls — model is done
-      if (
-        choice.finish_reason === "stop" ||
-        !assistantMessage.tool_calls?.length
-      ) {
+      // No tool calls — check if model returned them as JSON in content
+      let toolCalls = assistantMessage.tool_calls ?? [];
+
+      if (!toolCalls.length && assistantMessage.content) {
+        // Try to parse content as JSON tool call
+        try {
+          const parsed = JSON.parse(assistantMessage.content.trim());
+          if (parsed && parsed.name && parsed.arguments) {
+            toolCalls = [{
+              id: generateID(),
+              function: {
+                name: String(parsed.name),
+                arguments: typeof parsed.arguments === 'string'
+                  ? parsed.arguments
+                  : JSON.stringify(parsed.arguments)
+              }
+            }];
+            assistantMessage.content = null;
+          }
+        } catch {
+          // Not JSON, it's just regular text content
+        }
+      }
+
+      if (!toolCalls.length) {
         taskDone = true;
         break;
       }
 
       // Execute each tool call
-      for (const toolCall of assistantMessage.tool_calls ?? []) {
+      for (const toolCall of toolCalls) {
         const toolName = toolCall.function.name;
         const toolArgs = JSON.parse(toolCall.function.arguments) as Record<string, string>;
 
