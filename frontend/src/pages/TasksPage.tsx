@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { tasksApi, agentsApi } from "../lib/api.js";
 import { useAuthStore } from "../store/auth.js";
 import { Panel }     from "../components/ui/Panel.js";
@@ -15,7 +15,6 @@ const FILTERS = ["all", "todo", "in_progress", "done"] as const;
 
 export function TasksPage({ onNewTask }: TasksPageProps) {
   const companyId   = useAuthStore((s) => s.companyId)!;
-  const queryClient = useQueryClient();
   const [filter, setFilter] = useState<string>("all");
 
   const { data: tasks = [], isLoading } = useQuery({
@@ -27,12 +26,6 @@ export function TasksPage({ onNewTask }: TasksPageProps) {
   const { data: agents = [] } = useQuery({
     queryKey: ["agents", companyId],
     queryFn:  () => agentsApi.list(companyId),
-  });
-
-  const updateStatus = useMutation({
-    mutationFn: ({ taskId, status }: { taskId: string; status: string }) =>
-      tasksApi.updateStatus(taskId, status),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 
   const filtered = filter === "all" ? tasks : tasks.filter((t) => t.status === filter);

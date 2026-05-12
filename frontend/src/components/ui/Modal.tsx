@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { IconX } from "../icons/index.js";
-import { Button } from "./Button.js";
 
 interface ModalProps {
   title: string;

@@ -10,13 +10,9 @@ interface NewAgentModalProps {
 }
 
 const MODELS = [
-  "llama3.1:8b",
-  "llama3.2:3b",
-  "qwen2.5:7b",
-  "qwen2.5-coder:7b",
-  "deepseek-coder-v2:16b",
-  "phi3:mini",
-  "mistral:7b",
+  "llama3:latest",
+  "qwen2.5-coder:latest",
+  "gemma4:26b",
 ];
 
 export function NewAgentModal({ onClose }: NewAgentModalProps) {
